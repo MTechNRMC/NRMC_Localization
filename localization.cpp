@@ -15,12 +15,13 @@ static struct TARGET
 
 
 class ProcessTargets{
-public: 
+public:
 	int points;
-	
-	ProcessTargets()
+	float data[decimation*angles][3];
+
+	ProcessTargets() :points(decimation * angles)
 	{
-		points = decimation * angles;
+		
 	}
 
 	void search()
@@ -45,27 +46,34 @@ public:
 int main(int argc, const char * argv[])
 {
 	ProcessTargets Targets;
-	
-	int retval = ultra_simple(argc, argv);
+	RPlidarDriver * retdrv;
+	u_result op_result;
+	int retval = ultra_simple(argc, argv, &retdrv);
 	if (retval != 1)
 		printf("Something wrong. Error code: %d", retval);
-	
+
 	while (1){
 		
 		rplidar_response_measurement_node_t nodes[angles * decimation];
 		size_t   node_count = _countof(nodes);
-		op_result = drv->grabScanData(nodes, node_count);
+		op_result = retdrv->grabScanData(nodes, node_count);
 
 		if (IS_OK(op_result))
 		{
-			drv->ascendScanData(nodes, node_count);
+			retdrv->ascendScanData(nodes, node_count);
 
 			// first build the table
 			for (int pos = 0; pos < (int)node_count; ++pos) {
 				//string quality = (nodes[pos].sync_quality & RPLIDAR_RESP_MEASUREMENT_SYNCBIT) ? "S " : "  "; 1.angle 2. distance 3. quality;
-				data[pos][0] = (nodes[pos].angle_q6_checkbit >> RPLIDAR_RESP_MEASUREMENT_ANGLE_SHIFT) / 64.0f;
-				data[pos][1] = nodes[pos].distance_q2 / 4.0f;
-				data[pos][2] = nodes[pos].sync_quality >> RPLIDAR_RESP_MEASUREMENT_QUALITY_SHIFT;
+				Targets.data[pos][0] = (nodes[pos].angle_q6_checkbit >> RPLIDAR_RESP_MEASUREMENT_ANGLE_SHIFT) / 64.0f;
+				Targets.data[pos][1] = nodes[pos].distance_q2 / 4.0f;
+				Targets.data[pos][2] = nodes[pos].sync_quality >> RPLIDAR_RESP_MEASUREMENT_QUALITY_SHIFT;
+
+				printf("%s theta: %03.2f Dist: %08.2f Q: %d \n",
+					(nodes[pos].sync_quality & RPLIDAR_RESP_MEASUREMENT_SYNCBIT) ? "S " : "  ",
+					(nodes[pos].angle_q6_checkbit >> RPLIDAR_RESP_MEASUREMENT_ANGLE_SHIFT) / 64.0f,
+					nodes[pos].distance_q2 / 4.0f,
+					nodes[pos].sync_quality >> RPLIDAR_RESP_MEASUREMENT_QUALITY_SHIFT);
 			}
 
 			//next process the data from the table
@@ -75,8 +83,8 @@ int main(int argc, const char * argv[])
 
 	}
 
-	on_finished();
+	on_finished(&retdrv);
 	return 0;
-	
+
 }
 
