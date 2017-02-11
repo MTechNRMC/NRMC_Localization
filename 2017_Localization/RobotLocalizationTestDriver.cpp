@@ -2,6 +2,7 @@
 
 #include "RobotLocalization.h"
 #include <string>
+#include <math.h>
 
 using namespace std;
 
