@@ -1,9 +1,6 @@
 #!/usr/bin/python3
 import sys, math
-from RobotLocalization import RobotLocalization
-from collections import namedtuple
-
-Position = namedtuple('Position', 'x y')
+from RobotLocalization import RobotLocalization, Position
 
 def main(argv):
   if len(argv) != 6:
