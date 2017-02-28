@@ -17,6 +17,6 @@ int main(int argc, char** argv)
 	double bottomDistance = sqrt(pow(bottomPostPosition.x - realPosition.x, 2) + pow(bottomPostPosition.y - realPosition.y, 2));
 	POSITION foundPosition = localizer.findPosition(bottomPostPosition, topDistance, bottomDistance, separation);
 
-	printf("Found position as %f, %f; real position is %f, %f\n", foundPosition.x, foundPosition.y, realPosition.x, realPosition.y);
+	printf("Found position as %.20f, %.20f; real position is %.20f, %.20f\n", foundPosition.x, foundPosition.y, realPosition.x, realPosition.y);
 }
 
