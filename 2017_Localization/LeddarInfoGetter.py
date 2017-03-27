@@ -3,8 +3,11 @@ import time
 
 # Returns distance in meters to whatever the leddar at
 # leddar_address with leddar_id is looking at
-def get_distance(leddar_address, leddar_id):
+def get_distance(leddar_com_port, leddar_address):
   minimalmodbus.BAUDRATE=115200
-  leddar = minimalmodbus.Instrument(leddar_address, leddar_id)
-  #print(testLeddar.read_register(22, 0, 4)/256)
+  
+  # Might fix communication errors?
+  minimalmodbus.TIMEOUT = 1.0
+  leddar = minimalmodbus.Instrument(leddar_com_port, leddar_address)
   measurement = leddar.read_register(24, 0, 4)/1000
+  return measurement
