@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys, math
-from RobotLocalization import RobotLocalization, Position
+from RobotLocalization import RobotLocalization
+from Position import Position
 
 def main(argv):
   if len(argv) != 6:

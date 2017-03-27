@@ -1,7 +1,5 @@
 import math
-from collections import namedtuple
-
-Position = namedtuple("Position", "x y")
+from Position import Position
 
 class RobotLocalization:
   def __init__(self, top_post_position, bottom_post_position):
