@@ -1,7 +1,7 @@
 import math
 from Position import Position
 
-class RobotLocalization:
+class Localization:
   def __init__(self, top_post_position, bottom_post_position):
     self.top_post_position = top_post_position
     self.bottom_post_position = bottom_post_position
