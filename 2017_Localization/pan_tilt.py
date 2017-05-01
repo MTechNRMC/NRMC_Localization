@@ -88,6 +88,8 @@ class Gimbal ():
 
   def update(self, error):
     if not self.first_update:
+      print("Updating position, current error is {} and previous error is {}".format(error,
+             self.previous_error))
       error_delta = error - self.previous_error
       P_gain      = self.proportional_gain;
       D_gain      = self.derivative_gain;
@@ -132,26 +134,24 @@ def main():
 
   # Run until we receive the INTERRUPT signal #
   while run_flag:
-
-    # Do nothing until a new block is available #
+    # Get a block
     count = pixy_get_blocks(BLOCK_BUFFER_SIZE, block)
+    # Look around if we don't see anything
     while count == 0 and run_flag:
       pan_gimbal.scan()
       set_position_result = pixy_rcs_set_position(PIXY_RCS_PAN_CHANNEL, pan_gimbal.position)
       time.sleep(.05)
       count = pixy_get_blocks(BLOCK_BUFFER_SIZE, block)
-    print(pan_gimbal.position)
+    print("Position at {}, see block with x of {} and y of {}".format(pan_gimbal.position, 
+           block.x, block.y))
 
     # Calculate the difference between Pixy's center of focus #
     # and the target.                                         #
-    pan_error  = PIXY_X_CENTER - block.x
-    #tilt_error = block.y - PIXY_Y_CENTER
+    pan_error  = PIXY_Y_CENTER - block.y
 
     # Apply corrections to the pan/tilt gimbals with the goal #
     # of putting the target in the center of Pixy's focus.    #
     pan_gimbal.update(pan_error)
-    #tilt_gimbal.update(tilt_error)
-
     set_position_result = pixy_rcs_set_position(PIXY_RCS_PAN_CHANNEL, pan_gimbal.position)
 
     if set_position_result < 0:
@@ -166,6 +166,8 @@ def main():
         print '  sig:%2d x:%4d y:%4d width:%4d height:%4d' % (block.signature, block.x, block.y, block.width, block.height)
 
     frame_index = frame_index + 1
+    # Limit speed a bit
+    time.sleep(.05)
 
   pixy_close()
 
