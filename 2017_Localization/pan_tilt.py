@@ -139,20 +139,26 @@ def main():
     # Look around if we don't see anything
     while count == 0 and run_flag:
       pan_gimbal.scan()
+      tilt_gimbal.scan()
       set_position_result = pixy_rcs_set_position(PIXY_RCS_PAN_CHANNEL, pan_gimbal.position)
+      set_position_result = pixy_rcs_set_position(PIXY_RCS_TILT_CHANNEL, tilt_gimbal.position)
       time.sleep(.05)
       count = pixy_get_blocks(BLOCK_BUFFER_SIZE, block)
-    print("Position at {}, see block with x of {} and y of {}".format(pan_gimbal.position, 
+    print("Position at {} y and {} x, see block with x of {} and y of {}".format(
+           pan_gimbal.position, tilt_gimbal.position,
            block.x, block.y))
 
     # Calculate the difference between Pixy's center of focus #
     # and the target.                                         #
     pan_error  = PIXY_Y_CENTER - block.y
+    tilt_error = PIXY_X_CENTER - block.x
 
     # Apply corrections to the pan/tilt gimbals with the goal #
     # of putting the target in the center of Pixy's focus.    #
     pan_gimbal.update(pan_error)
+    tilt_gimbal.update(tilt_error)
     set_position_result = pixy_rcs_set_position(PIXY_RCS_PAN_CHANNEL, pan_gimbal.position)
+    set_position_result = pixy_rcs_set_position(PIXY_RCS_TILT_CHANNEL, tilt_gimbal.position)
 
     if set_position_result < 0:
       pixy_error(set_position_result)
