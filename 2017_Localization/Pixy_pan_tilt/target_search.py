@@ -50,6 +50,7 @@ def main():
     while count == 0:
       pan_gimbal.scan()
       tilt_gimbal.scan()
+      
       pixy_rcs_set_position(PIXY_RCS_PAN_CHANNEL, pan_gimbal.position)
       pixy_rcs_set_position(PIXY_RCS_TILT_CHANNEL, tilt_gimbal.position)
       time.sleep(.05)
