@@ -50,9 +50,8 @@ def main():
     while count == 0:
       pan_gimbal.scan()
       tilt_gimbal.scan()
-      
-      pixy_rcs_set_position(PIXY_RCS_PAN_CHANNEL, pan_gimbal.position)
-      pixy_rcs_set_position(PIXY_RCS_TILT_CHANNEL, tilt_gimbal.position)
+      pixy_rcs_set_position(PIXY_RCS_PAN_CHANNEL, int(pan_gimbal.position))
+      pixy_rcs_set_position(PIXY_RCS_TILT_CHANNEL, int(tilt_gimbal.position))
       time.sleep(.05)
       count = pixy_get_blocks(BLOCK_BUFFER_SIZE, block)
     print("Position at {}, {}; block seen at {}, {}".format(
@@ -66,8 +65,8 @@ def main():
     # Apply correction to try to center on target
     pan_gimbal.update(pan_error)
     tilt_gimbal.update(tilt_error)
-    set_position_result = pixy_rcs_set_position(PIXY_RCS_PAN_CHANNEL, pan_gimbal.position)
-    set_position_result = pixy_rcs_set_position(PIXY_RCS_TILT_CHANNEL, tilt_gimbal.position)
+    set_position_result = pixy_rcs_set_position(PIXY_RCS_PAN_CHANNEL, int(pan_gimbal.position))
+    set_position_result = pixy_rcs_set_position(PIXY_RCS_TILT_CHANNEL, int(tilt_gimbal.position))
 
     if set_position_result < 0:
       pixy_error(set_position_result)

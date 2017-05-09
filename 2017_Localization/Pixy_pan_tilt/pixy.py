@@ -70,27 +70,27 @@ except AttributeError:
 
 
 
-def pixy_init():
+def pixy_init() -> "int" :
   return _pixy.pixy_init()
 pixy_init = _pixy.pixy_init
 
-def pixy_close():
+def pixy_close() -> "void" :
   return _pixy.pixy_close()
 pixy_close = _pixy.pixy_close
 
-def pixy_error(*args):
+def pixy_error(*args) -> "void" :
   return _pixy.pixy_error(*args)
 pixy_error = _pixy.pixy_error
 
-def pixy_blocks_are_new():
+def pixy_blocks_are_new() -> "int" :
   return _pixy.pixy_blocks_are_new()
 pixy_blocks_are_new = _pixy.pixy_blocks_are_new
 
-def pixy_get_blocks(*args):
+def pixy_get_blocks(*args) -> "int" :
   return _pixy.pixy_get_blocks(*args)
 pixy_get_blocks = _pixy.pixy_get_blocks
 
-def pixy_rcs_set_position(*args):
+def pixy_rcs_set_position(*args) -> "int" :
   return _pixy.pixy_rcs_set_position(*args)
 pixy_rcs_set_position = _pixy.pixy_rcs_set_position
 class Block(_object):
